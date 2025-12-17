@@ -48,6 +48,26 @@ async function run() {
         res.status(500).send({ error: err.message });
       }
     });
+    // GET donation requests by user email
+    app.get("/donation-requests", async (req, res) => {
+      try {
+        const email = req.query.email;
+
+        let query = {};
+        if (email) {
+          query.requesterEmail = email;
+        }
+
+        const result = await donationRequestsCollection
+          .find(query)
+          .sort({ createdAt: -1 })
+          .toArray();
+
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "Failed to fetch donation requests" });
+      }
+    });
 
     // Add a new donor
     app.post("/donors", async (req, res) => {
