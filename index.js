@@ -39,7 +39,7 @@ async function run() {
       res.send("Blood donation API is running!");
     });
 
-    // Get all donors
+    // 1 Get all donors
     app.get("/donors", async (req, res) => {
       try {
         const donors = await donorsCollection.find().toArray();
@@ -48,28 +48,27 @@ async function run() {
         res.status(500).send({ error: err.message });
       }
     });
-    // GET donation requests by user email
-    app.get("/donation-requests", async (req, res) => {
-      try {
-        const email = req.query.email;
+    //2 GET donation requests by user email
+     app.get("/donation-requests", async (req, res) => {
+       try {
+         const email = req.query.email;
+         let query = {};
+         if (email) {
+           query.requesterEmail = email;
+         }
 
-        let query = {};
-        if (email) {
-          query.requesterEmail = email;
-        }
+         const result = await donationRequestsCollection
+           .find(query)
+           .sort({ createdAt: -1 })
+           .toArray();
 
-        const result = await donationRequestsCollection
-          .find(query)
-          .sort({ createdAt: -1 })
-          .toArray();
+         res.send(result);
+       } catch (error) {
+         res.status(500).send({ error: "Failed to fetch donation requests" });
+       }
+     });
 
-        res.send(result);
-      } catch (error) {
-        res.status(500).send({ error: "Failed to fetch donation requests" });
-      }
-    });
-
-    // Add a new donor
+    // 1 Add a new donor
     app.post("/donors", async (req, res) => {
       try {
         const donor = req.body;
@@ -79,6 +78,19 @@ async function run() {
         res.status(500).send({ error: err.message });
       }
     });
+    //2 POST donation request
+   app.post("/donation-requests", async (req, res) => {
+     try {
+       const donation = req.body;
+       donation.status = "pending";
+       donation.createdAt = new Date();
+
+       const result = await donationRequestsCollection.insertOne(donation);
+       res.send(result);
+     } catch (error) {
+       res.status(500).send({ error: "Failed to create donation request" });
+     }
+   });
 
     // Ping to confirm connection
     await client.db("admin").command({ ping: 1 });
