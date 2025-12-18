@@ -1,11 +1,15 @@
 // index.js
 const express = require("express");
 const cors = require("cors");
+const app = express();
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-const app = express();
+
 const port = process.env.PORT || 3000;
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
+
 
 // Middleware
 app.use(express.json());
@@ -98,6 +102,24 @@ async function run() {
         res.status(500).send({ error: "Failed to create donation request" });
       }
     });
+
+
+    // payment related apis
+    app.post("/create-payment-intent", async (req, res) => {
+      const { amount } = req.body;
+      try {
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: amount * 100, // BDT cents
+          currency: "bdt",
+          payment_method_types: ["card"],
+        });
+        res.send({ clientSecret: paymentIntent.client_secret });
+      } catch (error) {
+        res.status(500).send({ error: error.message });
+      }
+    });
+
+
 
     // Ping to confirm connection
     await client.db("admin").command({ ping: 1 });
