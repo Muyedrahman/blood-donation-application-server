@@ -32,6 +32,8 @@ async function run() {
     // Collections
     const donorsCollection = db.collection("donors");
     const donationRequestsCollection = db.collection("donation_requests");
+    const fundingCollection = db.collection("fundings");
+
 
     console.log("Connected successfully to MongoDB!");
 
