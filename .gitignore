@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 .vscode/*
 node_modules
 .env
 .vercel
+=======
+node_modules
+.env
+>>>>>>> 05f07fff5c317c964be7d7ea0a0b8ecd2bc4db5a
