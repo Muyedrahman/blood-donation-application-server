@@ -1,8 +1,12 @@
-.vscode/*
-node_modules
-.env
-.vercel
-=======
-node_modules
+# VSCode settings
+.vscode/
+
+# Node modules
+node_modules/
+
+# Environment variables
 .env
 
+# Vercel deployment config
+.vercel.json
+.vercel/
