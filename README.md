@@ -56,7 +56,7 @@ MongoDB URI (Atlas or self-hosted)
 
 Installation
 # clone
-git clone https://your-repo-url.git
+git clone https://github.com/Muyedrahman/server-blood-donation.git
 cd blood-for-life-server
 
 # install
